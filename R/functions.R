@@ -10,4 +10,13 @@ aScriptDisplayDialog <- function(
 	givingUpAfter=NA
 ){}
 
-aScriptChooseFromList <- function(x){}
+aScriptChooseFromList <- function(
+	listOfItems,
+	withTitle=NA,
+	withPrompt=NA,
+	defaultItems=NA,
+	OKbuttonName=NA,
+	cancelButtonName=NA,
+	multipleSelectionsAllowed=FALSE,
+	emptySelectionAllowed=FALSE
+){}
