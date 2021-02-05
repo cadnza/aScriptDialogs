@@ -32,7 +32,7 @@ aScriptChooseFromList(
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  These arguments and defaults are all standard in AppleScript. Their documentation can be found at \href{https://developer.apple.com/library/archive/documentation/LanguagesUtilities/Conceptual/MacAutomationScriptingGuide/DisplayDialogsandAlerts.html#//apple_ref/doc/uid/TP40016239-CH15-SW1}{https://developer.apple.com/}.
+  These arguments and defaults are all standard in AppleScript. Their documentation can be found at \href{https://developer.apple.com/library/archive/documentation/LanguagesUtilities/Conceptual/MacAutomationScriptingGuide/DisplayDialogsandAlerts.html#//apple_ref/doc/uid/TP40016239-CH15-SW1}{https://developer.apple.com/} (click the link; it'll take you right to the spot).
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
@@ -62,8 +62,8 @@ aScriptChooseFromList(
 \examples{
 aScriptChooseFromList(
 	listOfItems=c("a","b","c",1:3),
-	withTitle="oranges are my friends",
-	withPrompt="",
+	withTitle="Hello world!",
+	withPrompt="Right here:",
 	defaultItems=c("b",5),
 	OKbuttonName="a",
 	cancelButtonName="c",
