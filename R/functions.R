@@ -1,6 +1,6 @@
 .numericRegex <- "^\\d*(\\.\\d*)?$"
 
-.esc <- function(x,doubleQuotes=TRUE){
+.esc <- function(x,doubleQuotes=TRUE,wrapInDouble=TRUE){
 	if(is.na(x))
 		stop("Can't escape NA")
 	if(is.logical(x))
@@ -10,13 +10,13 @@
 	if(!grepl(.numericRegex,x))
 		return(
 			paste0(
-				"\"",
+				if(wrapInDouble) "\"",
 				ifelse(
 					doubleQuotes,
 					gsub("\\\"","\\\\\"",x),
 					gsub("'","\\\\'",x)
 				),
-				"\""
+				if(wrapInDouble) "\""
 			)
 		)
 	else
@@ -44,7 +44,7 @@
 .runInOSAscript <- function(command){
 	wrapped <- paste0(
 		"osascript -e '",
-		.esc(command,FALSE),
+		.esc(command,FALSE,FALSE),
 		"'"
 	)
 	return(wrapped) #TEMP
@@ -116,8 +116,8 @@ aScriptDisplayDialog <- function(
 	)
 	command <- paste(command[!is.na(command)],collapse=" ")
 	command <- trimws(gsub("  *"," ",command))
-	final <- .runInOSAscript(command)
-	return(final)
+	osa <- .runInOSAscript(command)
+	return(osa)
 }
 
 aScriptChooseFromList <- function(
@@ -172,8 +172,8 @@ aScriptChooseFromList <- function(
 	)
 	command <- paste(command[!is.na(command)],collapse=" ")
 	command <- trimws(gsub("  *"," ",command))
-	final <- .runInOSAscript(command)
-	return(final)
+	osa <- .runInOSAscript(command)
+	return(osa)
 }
 
 cat( # Testing #TEMP

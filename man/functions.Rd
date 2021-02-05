@@ -60,7 +60,7 @@ aScriptChooseFromList(
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-aScriptChooseFromList(
+aScriptDialogs::aScriptChooseFromList(
 	listOfItems=c("a","b","c",1:3),
 	withTitle="Hello world!",
 	withPrompt="Right here:",
