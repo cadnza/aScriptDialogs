@@ -14,7 +14,7 @@
 				ifelse(
 					doubleQuotes,
 					gsub("\\\"","\\\\\"",x),
-					gsub("'","\\\\'",x)
+					gsub("'","'\\\\''",x)
 				),
 				if(wrapInDouble) "\""
 			)
@@ -42,13 +42,46 @@
 		stop("aScriptDialogs only works on macOS. Sorry!")
 
 .runInOSAscript <- function(command){
+	separator <- gsub("\\.","x",paste(abs(rnorm(50)),collapse=""))
+	command <- c(paste("set vals to",command))
+	command <- c(
+		command,
+		"if vals is true or vals is false then return vals",
+		"set package to \"\"",
+		"if (count of vals) > 1 then",
+		"repeat with val in vals",
+		paste0(
+			"set package to package & val & ",
+			"\"",separator,"\""
+		),
+		"end repeat",
+		"else",
+		"set package to vals",
+		"end if",
+		"return package"
+	)
+	command <- paste(command,collapse="\n")
+	cmd <<- command #TEMP
 	wrapped <- paste0(
 		"osascript -e '",
 		.esc(command,FALSE,FALSE),
 		"'"
 	)
-	return(wrapped) #TEMP
-	# Run command, check for errors, and return formatted output # Maybe outsource to function? #TEMP
+	tryCatch(
+		{
+			final <- system(wrapped,intern=TRUE)
+		},
+		warning=function(x)
+			stop(x),
+		error=function(x)
+			stop(x)
+	)
+	if(final=="true")
+		return(TRUE)
+	if(final=="false")
+		return(FALSE)
+	final <- strsplit(final,separator)[[1]]
+	return(final)
 }
 
 aScriptDisplayDialog <- function(
@@ -62,7 +95,7 @@ aScriptDisplayDialog <- function(
 	withIcon=NA,
 	givingUpAfter=NA
 ){
-	# Restrict to macOS #TEMP
+	.macOScheck()
 	command <- c(
 		"display dialog",
 		.esc(text),
@@ -130,7 +163,7 @@ aScriptChooseFromList <- function(
 	multipleSelectionsAllowed=FALSE,
 	emptySelectionAllowed=FALSE
 ){
-	# Restrict to macOS #TEMP
+	.macOScheck()
 	command <- c(
 		"choose from list",
 		.vectorToAscriptList(listOfItems),
@@ -176,15 +209,28 @@ aScriptChooseFromList <- function(
 	return(osa)
 }
 
-cat( # Testing #TEMP
-	aScriptChooseFromList(
-		listOfItems=c("a","b","c",1:3),
-		withTitle="oranges are my friends",
-		withPrompt="",
-		defaultItems=c("hello",5),
-		OKbuttonName="bru\"ce",
-		cancelButtonName="he'nna",
-		multipleSelectionsAllowed=TRUE,
-		emptySelectionAllowed=TRUE
-	)
+outDialog <- aScriptDisplayDialog( # Testing #TEMP
+	"oranges",
+	defaultAnswer="Testing",
+	hiddenAnswer=FALSE,
+	buttons=c("cancel","go"),
+	defaultButton=NA,
+	cancelButton="cancel",
+	withTitle=NA,
+	withIcon=NA,
+	givingUpAfter=NA
 )
+
+outList <- aScriptChooseFromList( # Testing #TEMP
+	listOfItems=c("a","b\", c","c, d",1:3),
+	withTitle="oranges are my friends",
+	withPrompt="",
+	defaultItems=c("hello",5),
+	OKbuttonName="bru\"ce",
+	cancelButtonName="he'nna",
+	multipleSelectionsAllowed=TRUE,
+	emptySelectionAllowed=TRUE
+)
+
+cat(outDialog) #TEMP
+cat(outList) #TEMP
