@@ -277,7 +277,7 @@ outDialog <- aScriptDisplayDialog( # Testing #TEMP
 	defaultAnswer="Testing",
 	hiddenAnswer=FALSE,
 	buttons=c("cancel","go"),
-	defaultButton=NA,
+	defaultButton="go",
 	cancelButton="cancel",
 	withTitle=NA,
 	withIcon=NA,
