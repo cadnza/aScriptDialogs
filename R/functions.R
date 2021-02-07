@@ -191,13 +191,14 @@ aScriptDisplayAlert <- function(
 ){
 	.macOScheck()
 	allowedAs <- c("critical","informational","warning")
-	if(!as%in%allowedAs)
-		stop(
-			paste(
-				"The `as` argument must be one of the following:",
-				paste(allowedAs,collapse="\n"),sep="\n"
+	if(!is.na(allowedAs))
+		if(!as%in%allowedAs)
+			stop(
+				paste(
+					"The `as` argument must be one of the following:",
+					paste(allowedAs,collapse="\n"),sep="\n"
+				)
 			)
-		)
 	command <- c(
 		"display dialog",
 		.esc(text),
@@ -291,3 +292,5 @@ aScriptChooseFromList <- function(
 	osa <- .runInOSAscript(command)
 	return(osa)
 }
+
+aScriptDisplayDialog("oranges")
