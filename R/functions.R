@@ -292,5 +292,3 @@ aScriptChooseFromList <- function(
 	osa <- .runInOSAscript(command)
 	return(osa)
 }
-
-aScriptDisplayDialog("oranges")
