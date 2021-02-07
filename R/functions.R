@@ -191,7 +191,7 @@ aScriptDisplayAlert <- function(
 ){
 	.macOScheck()
 	allowedAs <- c("critical","informational","warning")
-	if(!is.na(allowedAs))
+	if(!is.na(as))
 		if(!as%in%allowedAs)
 			stop(
 				paste(
