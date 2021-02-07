@@ -200,7 +200,7 @@ aScriptDisplayAlert <- function(
 				)
 			)
 	command <- c(
-		"display dialog",
+		"display alert",
 		.esc(text),
 		ifelse(
 			is.na(message),
