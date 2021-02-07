@@ -205,12 +205,12 @@ aScriptDisplayAlert <- function(
 		ifelse(
 			is.na(message),
 			NA,
-			paste("default answer",.esc(message))
+			paste("message",.esc(message))
 		),
 		ifelse(
 			is.na(as),
 			NA,
-			paste("hidden answer",.esc(as))
+			paste("as",.esc(as))
 		),
 		ifelse(
 			all(is.na(buttons)),
