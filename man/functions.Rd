@@ -1,6 +1,7 @@
-\name{aScriptDisplayDialog}
+\name{aScriptDialogs}
+\alias{aScriptDisplayDialog}
+\alias{aScriptDisplayAlert}
 \alias{aScriptChooseFromList}
-\alias{aScriptDialogs}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{AppleScript dialogs for R}
 \description{
@@ -16,6 +17,16 @@ aScriptDisplayDialog(
 	cancelButton=NA,
 	withTitle=NA,
 	withIcon=NA,
+	givingUpAfter=NA
+)
+
+aScriptDisplayAlert(
+	text,
+	message=NA,
+	as=NA,
+	buttons=NA,
+	defaultButton=NA,
+	cancelButton=NA,
 	givingUpAfter=NA
 )
 

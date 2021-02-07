@@ -23,6 +23,12 @@
 		return(x)
 }
 
+.formatCommand <- function(command){
+	command <- paste(command[!is.na(command)],collapse=" ")
+	command <- trimws(gsub("  *"," ",command))
+	return(command)
+}
+
 .vectorToAscriptList <- function(v){
 	if(class(v)=="list")
 		stop("Please supply a vector instead of a list.")
@@ -42,6 +48,8 @@
 		stop("aScriptDialogs only works on macOS. Sorry!")
 
 .runInOSAscript <- function(command){
+	# This needs to be able to tell the difference between R-typed character and numeric variables e.g. in order to get either Item 1 as an index of the item called "1" in AppleScript. It'd be nice if the thing could differentiate the other way, too, i.e. preserve type from AppleScript back to R, but it's not as "necessary," strictly speaking. #TEMP
+	# We also need a way to handle AppleScript records. #TEMP
 	separator <- gsub("\\.","x",paste(abs(rnorm(50)),collapse=""))
 	command <- c(paste("set vals to",command))
 	command <- c(
@@ -147,8 +155,64 @@ aScriptDisplayDialog <- function(
 			paste("giving up after",givingUpAfter)
 		)
 	)
-	command <- paste(command[!is.na(command)],collapse=" ")
-	command <- trimws(gsub("  *"," ",command))
+	command <- .formatCommand(command)
+	osa <- .runInOSAscript(command)
+	return(osa)
+}
+
+aScriptDisplayAlert <- function(
+	text,
+	message=NA,
+	as=NA,
+	buttons=NA,
+	defaultButton=NA,
+	cancelButton=NA,
+	givingUpAfter=NA
+){
+	.macOScheck()
+	allowedAs <- c("critical","informational","warning")
+	if(!as%in%allowedAs)
+		stop(
+			paste(
+				"The `as` argument must be one of the following:",
+				paste(allowedAs,collapse="\n"),sep="\n"
+			)
+		)
+	command <- c(
+		"display dialog",
+		.esc(text),
+		ifelse(
+			is.na(message),
+			NA,
+			paste("default answer",.esc(message))
+		),
+		ifelse(
+			is.na(as),
+			NA,
+			paste("hidden answer",.esc(as))
+		),
+		ifelse(
+			all(is.na(buttons)),
+			NA,
+			paste("buttons",.vectorToAscriptList(buttons))
+		),
+		ifelse(
+			is.na(defaultButton),
+			NA,
+			paste("default button",.esc(defaultButton))
+		),
+		ifelse(
+			is.na(cancelButton),
+			NA,
+			paste("cancel button",.esc(cancelButton))
+		),
+		ifelse(
+			is.na(givingUpAfter),
+			NA,
+			paste("giving up after",givingUpAfter)
+		)
+	)
+	command <- .formatCommand(command)
 	osa <- .runInOSAscript(command)
 	return(osa)
 }
@@ -203,8 +267,7 @@ aScriptChooseFromList <- function(
 			paste("empty selection allowed",.esc(emptySelectionAllowed))
 		)
 	)
-	command <- paste(command[!is.na(command)],collapse=" ")
-	command <- trimws(gsub("  *"," ",command))
+	command <- .formatCommand(command)
 	osa <- .runInOSAscript(command)
 	return(osa)
 }
