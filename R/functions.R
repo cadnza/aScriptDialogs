@@ -75,7 +75,7 @@
 		"end if",
 		"if vals is true or vals is false then return vals",
 		"set package to \"\"",
-		"if (count of vals) > 1 then",
+		"if (count of vals) > 1 and class of vals is list then",
 		"repeat with val in vals",
 		"set package to package & val & separator",
 		"end repeat",
