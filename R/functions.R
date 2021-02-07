@@ -1,5 +1,3 @@
-.numericRegex <- "^\\d*(\\.\\d*)?$"
-
 .esc <- function(x,doubleQuotes=TRUE,wrapInDouble=TRUE){
 	if(is.na(x))
 		stop("Can't escape NA")
@@ -7,7 +5,7 @@
 		return(tolower(x))
 	if(!nchar(x))
 		return("\"\"")
-	if(!grepl(.numericRegex,x))
+	if(!is.numeric(x)&!is.integer(x))
 		return(
 			paste0(
 				if(wrapInDouble) "\"",
@@ -48,20 +46,38 @@
 		stop("aScriptDialogs only works on macOS. Sorry!")
 
 .runInOSAscript <- function(command){
-	# This needs to be able to tell the difference between R-typed character and numeric variables e.g. in order to get either Item 1 as an index of the item called "1" in AppleScript. It'd be nice if the thing could differentiate the other way, too, i.e. preserve type from AppleScript back to R, but it's not as "necessary," strictly speaking. #TEMP
-	# We also need a way to handle AppleScript records. #TEMP
-	separator <- gsub("\\.","x",paste(abs(rnorm(50)),collapse=""))
+	generateRandomString <- function()
+		gsub("\\.","x",paste(abs(rnorm(10)),collapse=""))
+	separator <- generateRandomString()
+	separatorName <- generateRandomString()
 	command <- c(paste("set vals to",command))
 	command <- c(
 		command,
+		paste0("set separator to \"",separator,"\""),
+		paste0("set separatorName to \"",separatorName,"\""),
+		"set tagText to \"text\"",
+		"set tagButton to \"button\"",
+		"if class of vals is record then",
+		"try",
+		paste(
+			"set vals to {",
+			"tagText & separatorName & text returned of vals,",
+			"tagButton & separatorName & button returned of vals",
+			"}"
+		),
+		"end try",
+		"try",
+		"set vals to tagText & separatorName & text returned of vals",
+		"end try",
+		"try",
+		"set vals to tagButton & separatorName & button returned of vals",
+		"end try",
+		"end if",
 		"if vals is true or vals is false then return vals",
 		"set package to \"\"",
 		"if (count of vals) > 1 then",
 		"repeat with val in vals",
-		paste0(
-			"set package to package & val & ",
-			"\"",separator,"\""
-		),
+		"set package to package & val & separator",
 		"end repeat",
 		"else",
 		"set package to vals",
@@ -69,7 +85,6 @@
 		"return package"
 	)
 	command <- paste(command,collapse="\n")
-	cmd <<- command #TEMP
 	wrapped <- paste0(
 		"osascript -e '",
 		.esc(command,FALSE,FALSE),
@@ -89,6 +104,11 @@
 	if(final=="false")
 		return(FALSE)
 	final <- strsplit(final,separator)[[1]]
+	if(all(grepl(separatorName,final))){
+		items <- strsplit(final,separatorName)
+		final <- sapply(items,function(x) x[[2]])
+		names(final) <- sapply(items,function(x) x[[1]])
+	}
 	return(final)
 }
 
@@ -271,29 +291,3 @@ aScriptChooseFromList <- function(
 	osa <- .runInOSAscript(command)
 	return(osa)
 }
-
-outDialog <- aScriptDisplayDialog( # Testing #TEMP
-	"oranges",
-	defaultAnswer="Testing",
-	hiddenAnswer=FALSE,
-	buttons=c("cancel","go"),
-	defaultButton="go",
-	cancelButton="cancel",
-	withTitle=NA,
-	withIcon=NA,
-	givingUpAfter=NA
-)
-
-outList <- aScriptChooseFromList( # Testing #TEMP
-	listOfItems=c("a","b\", c","c, d",1:3),
-	withTitle="oranges are my friends",
-	withPrompt="",
-	defaultItems=c("hello",5),
-	OKbuttonName="bru\"ce",
-	cancelButtonName="he'nna",
-	multipleSelectionsAllowed=TRUE,
-	emptySelectionAllowed=TRUE
-)
-
-cat(outDialog) #TEMP
-cat(outList) #TEMP
