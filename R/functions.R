@@ -210,7 +210,7 @@ aScriptDisplayAlert <- function(
 		ifelse(
 			is.na(as),
 			NA,
-			paste("as",.esc(as))
+			paste("as",as)
 		),
 		ifelse(
 			all(is.na(buttons)),
