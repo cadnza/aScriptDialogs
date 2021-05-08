@@ -52,7 +52,11 @@
 	separatorName <- generateRandomString()
 	command <- c(paste("set vals to",command))
 	command <- c(
+		"try",
 		command,
+		"on error",
+		"set vals to false",
+		"end try",
 		paste0("set separator to \"",separator,"\""),
 		paste0("set separatorName to \"",separatorName,"\""),
 		"set tagText to \"text\"",
