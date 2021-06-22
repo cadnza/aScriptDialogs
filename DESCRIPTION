@@ -1,7 +1,7 @@
 Package: aScriptDialogs
 Type: Package
 Title: AppleScript dialogs for R
-Version: 1.0
+Version: 1.0.0
 Author: Jon Dayley
 Maintainer: Jon Dayley <jonathandayley@gmail.com>
 Description: Provides easy access to AppleScript dialogs in R via osascript.
