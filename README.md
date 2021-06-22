@@ -1,5 +1,7 @@
 # aScriptDialogs
 
+![](https://img.shields.io/github/v/release/cadnza/aScriptDialogs) ![](https://img.shields.io/github/r-package/v/cadnza/aScriptDialogs)
+
 Handy AppleScript dialogs that take and return native R objects.
 
 ## Installation
