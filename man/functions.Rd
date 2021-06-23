@@ -59,7 +59,7 @@ aScriptChooseFromList(
 %% ~put references to the literature/web site here ~
 }
 \author{
-%%  ~~who you are~~
+\href{https://github.com/cadnza}{Jon Dayley}
 }
 \note{
 %%  ~~further notes~~
