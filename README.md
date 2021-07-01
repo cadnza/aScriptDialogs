@@ -1,4 +1,4 @@
-# aScriptDialogs
+# AppleScript dialogs in R
 
 ![](https://img.shields.io/github/v/release/cadnza/aScriptDialogs) ![](https://img.shields.io/github/r-package/v/cadnza/aScriptDialogs)
 
